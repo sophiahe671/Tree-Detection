@@ -20,33 +20,11 @@ if __name__ == '__main__':
     model = main.deepforest()
     model.use_release()
 
-    ground_truth_annotations = '/Users/sophi/PycharmProjects/TreeCanopyStudy/.venv/Lib/site-packages/deepforest/data/BoundingBoxesTest.csv'
+    ground_truth_annotations = get_data('TreeTestAnnotations.csv')
 
-    # run the predict tile method
-    sample_image_path = get_data("QLDmaskBeforeChannels.png")
+    # initialize file paths
+    sample_image_path = get_data('TreeTest.png')
     root_dir = '/Users/sophi/PycharmProjects/TreeCanopyStudy/.venv/Lib/site-packages/deepforest/data'
-    tile = model.predict_tile(sample_image_path, return_plot=True, mosaic=True, patch_overlap=0, iou_threshold=0.05, patch_size=400)
-
-    # Evaluation Methods
-
-    # Method 1: Recall and Precision at a fixed IoU Score
-    # results = model.evaluate(ground_truth_annotations, root_dir, iou_threshold=0.4)
-    # precision = results['box_precision']
-    # recall = results['box_recall']
-    # f1_score = 2 * precision * recall / (precision + recall)
-
-    # Method 2: Get loss score by creating a dict of IoU values (was returning null idk why)
-    # results = model.trainer.validate(model)
-    # print(results)
-    #print('recall', results["box_recall"])
-    #print('precision', results["box_precision"])
-
-    # Method 3: Visualize the predictions vs the ground truth boxes (doesn't work)
-    # sample_image_csv_path = get_data("QLDmaskBeforeChannels.png")
-    # predictions = model.predict_file(csv_file=ground_truth_annotations, root_dir=root_dir)
-    # visualize.plot_prediction_dataframe(predictions, ground_truth_annotations, root_dir)
-    # result = evaluate.evaluate_image(predictions=predictions, ground_df=ground_truth, root_dir=os.path.dirname(csv_file), savedir=None)
-
 
     # Grid search for optimal parameters
     max_f1_score = -inf
@@ -56,6 +34,8 @@ if __name__ == '__main__':
             for patch in patch_size_parameters:
                 tile = model.predict_tile(sample_image_path, return_plot=True, patch_overlap=overlap,
                                           iou_threshold=threshold, patch_size=patch)
+
+                # Evaluation method
                 results = model.evaluate(ground_truth_annotations, root_dir, iou_threshold=0.4)
                 precision = results['box_precision']
                 recall = results['box_recall']
