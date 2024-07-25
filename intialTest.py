@@ -1,5 +1,6 @@
 from math import inf
 
+import numpy as np
 from PIL import Image
 from deepforest import main
 from deepforest import get_data
@@ -36,52 +37,37 @@ if __name__ == '__main__':
                               iou_threshold=0.07, patch_size=400)
 
     results = model.evaluate(ground_truth_annotations, root_dir, iou_threshold=0.4)
-    print('results', results['results'])
-    print('box_predictions', results['box_precision'])
-    model.config["validation"]["csv_file"] = sample_image_path
-    model.config["validation"]["root_dir"] = root_dir
-    results2 = model.trainer.validate(model)
-    print('results2', results2)
-
-    # precision = results['box_precision']
-    # recall = results['box_recall']
-
-    # F1 score
-    #f1_score = 2.0 * precision * recall / (precision + recall)
-    #print(f1_score, 'f1_score')
+    iou_arr = np.array(results['results']['IoU'])
+    iou_arr = np.average(iou_arr)
+    print('average IoU is ', iou_arr)
+    print('results', results['results']['IoU'])
 
     # Grid search for optimal parameters
-    max_f1_score = -inf
-    max_f1_params = []
+    max_iou_score = -inf
+    max_iou_params = []
 
-    # max_iou_score = -inf
-    # max_iou_params = []
+    for overlap in patch_overlap_parameters:
+        for threshold in iou_threshold_parameters:
+            for patch in patch_size_parameters:
+                tile = model.predict_tile(sample_image_path, return_plot=True, patch_overlap=overlap,
+                                          iou_threshold=threshold, patch_size=patch)
 
-    # for overlap in patch_overlap_parameters:
-    #     for threshold in iou_threshold_parameters:
-    #         for patch in patch_size_parameters:
-    #             tile = model.predict_tile(sample_image_path, return_plot=True, patch_overlap=overlap,
-    #                                       iou_threshold=threshold, patch_size=patch)
-    #
-    #             # Evaluation
-    #             results = model.evaluate(ground_truth_annotations, root_dir, iou_threshold=0.4)
-    #             precision = results['box_precision']
-    #             recall = results['box_recall']
-    #
-    #             # F1 score
-    #             f1_score = 2.0 * precision * recall / (precision + recall)
-    #
-    #             # IoU Evaluation method
-    #
-    #             if f1_score > max_f1_score:
-    #                 max_f1_score = f1_score
-    #                 max_f1_params = [overlap, threshold, patch]
-    #
-    # print('max_f1_params', max_f1_params)
-    # print('max_f1_score', max_f1_score)
+                # Evaluation
+                results = model.evaluate(ground_truth_annotations, root_dir, iou_threshold=0.4)
 
-    # optimal_prediction = model.predict_tile(sample_image_path, return_plot=True, patch_overlap=max_f1_params[0],
-    #                           iou_threshold=max_f1_params[1], patch_size=max_f1_params[2])
-    #
-    plt.imshow(tile[:,:,::-1])
+                # IoU score
+                iou_arr = np.array(results['results']['IoU'])
+                iou_score = np.average(iou_arr)
+
+                if iou_score > max_iou_score:
+                    max_iou_score = iou_score
+                    max_iou_params = [overlap, threshold, patch]
+
+    print('max_iou_params', max_iou_params)
+    print('max_iou_score', max_iou_score)
+
+    optimal_prediction = model.predict_tile(sample_image_path, return_plot=True, patch_overlap=max_iou_params[0],
+                              iou_threshold=max_iou_params[1], patch_size=max_iou_params[2])
+
+    plt.imshow(optimal_prediction[:,:,::-1])
     plt.show()
