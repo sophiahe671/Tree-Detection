@@ -18,31 +18,31 @@ def compute_iou(box1, box2):
 
     return iou
 
-def match_boxes_and_compute_iou(ground_truth_df, predictions_df):
+def match_boxes_and_compute_iou(df1, df2):
     iou_scores = []
-    for _, ground_truth_row in ground_truth_df.iterrows():
-        gt_box = {
-            "xmin": ground_truth_row["xmin"], 
-            "xmax": ground_truth_row["xmax"], 
-            "ymin": ground_truth_row["ymin"], 
-            "ymax": ground_truth_row["ymax"]
+    for _, df1_dict in df1.iterrows():
+        df1_box = {
+            "xmin": df1_dict["xmin"], 
+            "xmax": df1_dict["xmax"], 
+            "ymin": df1_dict["ymin"], 
+            "ymax": df1_dict["ymax"]
         }
         max_iou = 0
-        best_box = False
-        for _, prediction_row in predictions_df.iterrows():
-            pred_box = {
-                "xmin": prediction_row["xmin"], 
-                "xmax": prediction_row["xmax"], 
-                "ymin": prediction_row["ymin"], 
-                "ymax": prediction_row["ymax"]
+        best_df2_box = False
+        for _, df2_dict in df2.iterrows():
+            df2_box = {
+                "xmin": df2_dict ["xmin"], 
+                "xmax": df2_dict ["xmax"], 
+                "ymin": df2_dict ["ymin"], 
+                "ymax": df2_dict ["ymax"]
             }
-            iou = compute_iou(gt_box, pred_box)
+            iou = compute_iou(df1_box, df2_box)
             if iou >= max_iou:
-                best_box = pred_box
+                best_df2_box = df2_box
                 max_iou = iou
         iou_scores.append({
-            "gt_box": gt_box,
-            "pred_box": best_box,
+            "df1_box": df1_box,
+            "df2_box": best_df2_box,
             "iou": max_iou
         })
 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     # print("\nPredicted Annotations:")
     # print(predictions_df.head())
 
-    iou_results = match_boxes_and_compute_iou(ground_truth_df, predictions_df)
+    iou_results = (match_boxes_and_compute_iou(ground_truth_df, predictions_df) + match_boxes_and_compute_iou(predictions_df, ground_truth_df)) / 2
     print("\nIoU Mean:")
     print(iou_results)
 
