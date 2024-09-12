@@ -1,4 +1,22 @@
-Windows installation steps for DeepForest:
+<h1 align="center">
+  DeepForest
+</h1>
+
+<h2 align="left">
+  Summary
+</h2>
+
+<h2 align="left">
+  Tech Stack
+</h2>
+
+<h2 align="left">
+  Challenges
+</h2>
+
+<h2 align="left">
+  Windows installation steps for DeepForest
+</h2>
 
 Install conda (run the following commands in Powershell)
 
@@ -28,3 +46,11 @@ If you don’t know where your folder is, run the script with whatever data it h
 Your deepforest_config.yml file should also be in here if you want to edit it  
 
 Run the python script from the Anaconda prompt  
+
+<h2 align="left">
+  What I learned
+</h2>
+
+<h2 align="left">
+  Future Plans
+</h2>
