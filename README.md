@@ -2,6 +2,8 @@
   DeepForest
 </h1>
 
+![](https://deepforest.readthedocs.io/en/v1.3.3/_images/getting_started1.png)
+
 <h2 align="left">
   Summary
 </h2>
