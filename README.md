@@ -5,7 +5,7 @@
 ![](https://deepforest.readthedocs.io/en/v1.3.3/_images/getting_started1.png)
 
 ## Mission
-As part of the ever changing landscapes and dangers of climate change, estimating the above ground biomass is needed to monitor how different areas differ and change over time. To estimate the above ground biomass, the tree canopy's coverage can be detected and segmented, which should correlate with the amount of stored carbon in the vegetation. My mission along with two other engineers was to optimize and fine-tune a model that could be used to detect trees thereby estimating the canopy coverage.
+As part of the ever changing landscapes and dangers of climate change, estimates of above ground biomass are needed to monitor how different areas change over time. To estimate the above ground biomass, DeepForest detects and segments the tree canopy's coverage, which should correlate with the amount of stored carbon in the vegetation. My mission, along with two other engineers, was to optimize and fine-tune this model by tuning the patch size, acceptance threshold, and other hyperparameters.
 
 ## Summary
 DeepForest is a Python library that detects and draws boxes around specific objects, primarily trees and birds. It has pretrained models for predicting trees, although there are ways to fine tune those models if you supply more data.
@@ -67,7 +67,7 @@ Run the python script from the Anaconda prompt
 - **Time to Annotate**: Annotating a large enough set of images to effectively train a model is time intensive. Needs to be done by hand and be accurate
 
 ## What I learned
-- Different evaluation metrics to measure the accuracy vs precision of the model including IoU (intersection over union) and F1 score
+- Evaluation metrics to measure the accuracy vs precision of the model require determining IoU (intersection over union) and F1 score accurately
 - Models require different hyperparameters depending on the setting of the image (rurual vs. urban)
 - Annotating ground-truth images requires high precision because this will influence the generation of the model
 
